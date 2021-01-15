@@ -4,5 +4,7 @@
 
 ## 运行
 在根目录下输入命令：
-python manage.py runserver
+·python manage.py runserver·
+
+注意：python =3.7 || 3.8  ,python 3.9不支持pyarrow 
 
