@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block main %}
+<div class="content">
+    <div class="page-inner">
+        <h1>There are something wrong in this file : </h1>
+        <div id="checkRes">
+        </div>
+    </div>
+</div>
+{% endblock main %}
+<!-- Chart JS -->
+{% block toc %}
+<script type="text/javascript">
+   var thedetail = {{detail|safe}}
+    warringlist = ""
+    for(i in thedetail){
+        onetip = thedetail[i]
+        tempwarnning = "<div class='alert alert-warning'>"+ onetip + "</div>"
+        warringlist = warringlist + tempwarnning
+    }
+
+    $("#checkRes").append(warringlist)
+
+   console.log(thedetail)
+</script>
+{% endblock toc %}

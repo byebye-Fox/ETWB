@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block main %}
+        <div class="content">
+            <div class="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="form-group form-inline">
+                                    <div class="card-title col-1">Hotspots</div>
+                                    <button class="btn btn-primary col-2 ml-1 mr-1" id="onboard">
+                                        <span class="btn-label">
+                                            <i class="fas fa-taxi">
+                                            </i>
+                                        </span>
+                                        load hotspots
+                                    </button>
+
+                                    <button class="btn btn-primary col-2 " id="getoff">
+                                        <span class="btn-label">
+                                            <i class="fas fa-taxi">
+                                            </i>
+                                        </span>
+                                        drop hotspots
+                                    </button>
+                                    <div class="col-6">
+                                        <div class="text-info" style="padding-left: 20%;">Blue points:this load/drop point is not in any hotspots</div>
+                                        <div  class="text-danger" style="padding-left: 20%;">Red points:this load/drop point is in at least one hotspots</div>
+                                    </div>
+                                  
+                                </div>
+                               </div>
+                            <div class="card-body">
+                                <div id="container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+{% endblock main %}
+<!-- Chart JS -->
+{% block toc %}
+<script>
+</script>
+{% endblock toc %}

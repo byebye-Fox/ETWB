@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block main %}
+<div class="content">
+    <div class="page-inner">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h1>Introduction</h1>
+                    </div>
+                    <div class="card-body">
+                        <div id="markdowncontent">
+                            {{ content|safe}}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+{% endblock main %}
+<!-- Chart JS -->
+{% block toc %}
+<script>
+</script>
+{% endblock toc %}

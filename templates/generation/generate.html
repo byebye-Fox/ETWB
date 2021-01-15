@@ -1,0 +1,154 @@
+{% extends 'base.html' %} {% block main %}
+<div class="content">
+    <div class="page-inner">
+        <div class="row" id="card1">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <form class="form-horizontal" onkeydown="if(event.keyCode==13){return false;}">
+                            <div class="form-group form-inline">
+                                <label for="numofvechicles" class="control-label col-md-2 mr-4 ">Number of vehicles</label>
+                                <input type="text" class="form-control col-md-2" id="numofvechicles" placeholder="1~200">
+                                <button class="btn btn-secondary  ml-4 mr-4" id="generateData" type="button">
+                                        <span class="btn-label">
+                                            <i class="fas fa-wrench"></i>
+                                        </span>
+                                        Generate data
+                                    </button>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Station List
+                                    </div>
+                                    <div class="card-body">
+                                        <ul id="stationList">
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="card-header">
+                                    <div class="form-group form-inline">
+                                        <button class="btn btn-secondary  ml-4 mr-4" id="stationCharge" type="button">
+                                                <span class="btn-label">
+                                                    <i class="fas fa-wrench"></i>
+                                                </span>
+                                                    charge stations
+                                            </button>
+                                        <button class="btn btn-info  ml-4 mr-4" id="editmodeloff" type="button" disabled="true">
+                                                <span class="btn-label">
+                                                    <i class="fas fa-redo-alt"></i>
+                                                </span>
+                                                turn off the edit mode
+                                            </button>
+
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="container2">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="card2" style="display:none">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">dataShow</div>
+                    </div>
+                    <div class="card-body" id="datashow">
+                        <div id="infoshow">
+                        </div>
+                        <div class="table-responsive">
+                            <table id="multi-filter-select" class="display table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>license</th>
+                                        <th>begin_time</th>
+                                        <th>end_time</th>
+                                        <th>load_hotspot</th>
+                                        <th>drop_hotspot</th>
+                                        <th>od_distance</th>
+                                        <th>traveled_from_charged</th>
+                                        <th>to_charge</th>
+                                        <th>cs_index</th>
+                                        <th>cs_name</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>license</th>
+                                        <th>begin_time</th>
+                                        <th>end_time</th>
+                                        <th>load_hotspot</th>
+                                        <th>drop_hotspot</th>
+                                        <th>od_distance</th>
+                                        <th>traveled_from_charged</th>
+                                        <th>to_charge</th>
+                                        <th>cs_index</th>
+                                        <th>cs_name</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody id="thetbody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="chart-container">
+                            <div id="barChart2" style="width: 100%;height:300px;"></div>
+                        </div>
+
+                        <a class="btn btn-success col-md-2 ml-4 mr-4" id="downloadData" href="{% url 'filedownload' %}">
+                            <span class="btn-label">
+                                    <i class="fas fa-cloud-download-alt">
+                                    </i>
+                                </span> Download travel data
+                        </a>
+                        <a class="btn btn-success col-md-2 ml-4 mr-4" id="downloadData" href="{% url 'stationdownload' %}">
+                            <span class="btn-label">
+                                    <i class="fas fa-cloud-download-alt">
+                                    </i>
+                                </span> Download station data
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="progressing" style="display:none;background-color:white;">
+            <div class="form-group form-inline">
+                <img src="../../static/assets/img/loadinggif.gif" alt="nope" class="col-md-6">
+                <div class="col-md-6">
+                    <p> The data is progressing , this will cost a lot time. </p>
+                    <p>For example :</p>
+                    <p>(number of vehicles : 10</p>
+                    <p>number of charging stations : 10)</p>
+                    <p>=>(cost time : 30second)</p>
+                    <p>you can estimate your time cost...</p>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock main %}
+<!-- Chart JS -->
+{% block toc %}
+<script>
+</script>
+{% endblock toc %}

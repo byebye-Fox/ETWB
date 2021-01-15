@@ -1,0 +1,12 @@
+#container{
+    width:auto; 
+    height:700px;
+    resize:both;
+}
+.container{
+  height: 100%
+}
+dd{
+  background-color: rgba(241, 42, 42, 0.562);
+  color: rgb(16, 0, 245);
+}  

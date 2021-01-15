@@ -1,0 +1,32 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="echarts.min.js"></script>
+<script src="shenzhen.js"></script>
+</head>
+
+<body>
+    <div id="map" style="width: 100%;height:300px;"></div>
+
+<script>
+  echarts.registerMap("shenzhen", shenzhen);  // 注册一个地图，名字叫shenzhen
+  var myChart = echarts.init(document.getElementById('map'))  // 拿到一个实例
+  option = {
+    backgroundColor: '#fff',
+    geo: {  // 地理坐标系组件
+      map: 'shenzhen',
+      itemStyle: {  // 这里的item就是上面说的地图的单位，在深圳地图上就是每个区
+        normal: {
+          areaColor: '#e8f6ff',
+          borderColor: '#4a9dc9'
+        }
+      },
+      emphasis: {
+        areaColor: '#cddeea'
+      }
+    }
+  }
+  myChart.setOption(option);
+</script>
+</body>
+</html>

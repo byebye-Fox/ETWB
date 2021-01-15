@@ -1,0 +1,52 @@
+
+{% extends 'base.html' %}
+{% block main %}
+<div class="content">
+    <div class="page-inner">
+        <div class="row">
+            <div class='card col-12' id='file_card1'>
+                <div class="card-header">
+                    <div class="from form-inline">
+                        <form action="{%url 'uploadFile' %}" enctype="multipart/form-data" method="post" class="col-12">
+                            {% csrf_token %}
+                            <input id="true_upload"  type="file" name="myfile" style="display:none;"/>  
+                            <input class="btn btn-primary col-4 mr-5" type="button" id="uploadFileButton" value="Choose file" />
+                            <input id="to_submit" class="btn btn-success col-3" type="submit" value="upload" disabled="true">
+                        </form>
+                    </div>
+                    
+                </div>
+                <div class="card-body">
+                    <h1>
+                       Rules
+                    </h1>
+                    <pre>
+                        all the data must be as this structer:
+                            one. there should be five columns:
+                            ["No" , "Charge station name" , "Longitude", "Latitude","Charge pills"]
+                            
+                            "No":Unique identification of each charging station
+                            "Charge station name":The name of each charging station
+                            "Longitude","Latitude":GPS points
+                            "Charge pills":The number of the charging pills
+                        make sure the csv file has no header. here's an example file:
+                    </pre>
+                    <a class="btn btn-success col-2 ml-4 mr-4" id="downloadData" href="{% url 'ori_stationdownload' %}">
+                        <span class="btn-label">
+                            <i class="fas fa-cloud-download-alt">
+                            </i>
+                        </span>
+                        Download example file
+                    </a>		
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main %}
+<!-- Chart JS -->
+{% block toc %}
+<script>
+</script>
+{% endblock toc %}

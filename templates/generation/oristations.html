@@ -1,0 +1,165 @@
+{% extends 'base.html' %} {% block main %}
+<div class="content">
+    <div class="page-inner">
+        <div class="row">
+            <div class='card col-md-12' id='ori_card1'>
+                <div class="card-header">
+                    <form class="form-horizontal" onkeydown="if(event.keyCode==13){return false;}">
+                        <div class="form-group form-inline">
+                            <label for="ori_numofvechicles" class="control-label col-md-2 mr-4 ">Number of vehicles</label>
+                            <input type="text" class="form-control col-md-2" id="ori_numofvechicles" placeholder="1~200">
+                            <button class="btn btn-secondary col-md-2 ml-4 mr-4" id="oriGenerateData" type="button">
+                                    <span class="btn-label">
+                                        <i class="fas fa-wrench"></i>
+                                    </span>
+                                    Generate data
+                                </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <div id="container3">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card col-md-12" id="ori_card2">
+                <div class="card-header">
+                    datashow
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="ori_infoshow">
+
+                        </div>
+                        <table id="ori-multi-filter-select" class="display table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>license</th>
+                                    <th>event</th>
+                                    <th>timestamp</th>
+                                    <th>location</th>
+                                    <th>traveled</th>
+                                    <th>station</th>
+                                    <th>queuing_time</th>
+                                    <th>charging_time</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>license</th>
+                                    <th>event</th>
+                                    <th>timestamp</th>
+                                    <th>location</th>
+                                    <th>traveled</th>
+                                    <th>station</th>
+                                    <th>queuing_time</th>
+                                    <th>charging_time</th>
+                                </tr>
+                            </tfoot>
+                            <tbody id="ori_thetbody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="chart-container">
+                        <div id="ori_barChart" style="width: 100%;height:300px;"></div>
+                        <div id='queuing_time_chart' style="width: 100%;height: 300px;"></div>
+                    </div>
+                    <a class="btn btn-success col-md-2 ml-4 mr-4" id="downloadData" href="{% url 'ori_filedownload' %}">
+                        <span class="btn-label">
+                            <i class="fas fa-cloud-download-alt">
+                            </i>
+                        </span> Download travel data
+                    </a>
+                    <a class="btn btn-success col-md-2 ml-4 mr-4" id="downloadData" href="{% url 'ori_stationdownload' %}">
+                        <span class="btn-label">
+                            <i class="fas fa-cloud-download-alt">
+                            </i>
+                        </span> Download station data
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="ori_progressing" style="display:none;background-color:white;">
+            <div class="form-group form-inline">
+                <img src="../../static/assets/img/loadinggif.gif" alt="nope" class="col-md-6">
+                <div class="col-md-6">
+                    <p> The data is progressing , this will cost a lot time. </p>
+                    <p>For example :</p>
+                    <p>(number of vehicles : 10</p>
+                    <p>number of charging stations : 10)</p>
+                    <p>=>(cost time : 30second)</p>
+                    <p>you can estimate your time cost...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main %} {% block toc %}
+<script>
+    $(document).ready(function() {
+        var map3 = new AMap.Map("container3", {
+            zoom: 12,
+            center: [114.029652662306, 22.5529062486263],
+            viewMode: "2D",
+            lang: "en", //地图语言
+            mapStyle: 'amap://styles/whitesmoke',
+        })
+
+        datas = [
+            [1, 'A01', 114.007401, 22.535500, 1, 112],
+            [2, 'FN0002', 114.009001, 22.534233, 1, 6],
+            [3, 'N04', 113.987547, 22.560519, 1, 40],
+            [4, 'D08', 114.088303, 22.562599, 1, 20],
+            [5, 'LJDL', 114.361504, 22.678499, 2, 16],
+            [6, 'D10', 114.074406, 22.559000, 1, 16],
+            [7, 'B04', 113.922977, 22.546375, 1, 20],
+            [8, 'D01', 114.123241, 22.562538, 1, 12],
+            [9, 'C01', 114.101748, 22.582541, 1, 52],
+            [10, 'E11', 114.068837, 22.573326, 1, 20],
+            [11, 'A02', 114.023404, 22.542650, 1, 16],
+            [12, 'E01', 114.023902, 22.619512, 1, 16],
+            [13, 'F02', 113.817750, 22.650682, 1, 8],
+            [14, 'A08', 113.944128, 22.506854, 1, 14],
+            [15, 'A09', 113.941642, 22.527053, 1, 16],
+            [16, 'A10', 113.962844, 22.528519, 1, 14],
+            [17, 'BN0002', 113.814932, 22.651322, 2, 12],
+            [18, 'D06', 114.304419, 22.600844, 1, 16],
+            [19, 'N02', 114.032902, 22.524276, 1, 16],
+            [20, 'F07', 113.858390, 22.579457, 1, 8],
+            [21, 'A03', 113.995054, 22.547247, 1, 16],
+            [22, 'E04', 114.003978, 22.636233, 2, 10],
+            [23, 'D09', 114.045125, 22.551410, 1, 10],
+            [24, 'F08', 113.838486, 22.609576, 1, 16],
+            [25, 'F10', 114.043404, 22.601, 1, 12],
+            [26, 'F11', 113.985199, 22.547701, 2, 12],
+            [27, 'F12', 113.8134, 22.624201, 1, 100],
+            [28, 'F13', 114.135002, 22.544001, 1, 100],
+            [29, 'PSBYD', 114.353401, 22.679399, 1, 12],
+            [30, 'S1', 113.8564, 22.616899, 1, 100],
+            [31, 'F15', 114.031502, 22.5252, 1, 100],
+            [32, 'S2', 114.1798, 22.5585, 1, 100]
+        ]
+
+        for (i in datas) {
+            let onetip = datas[i]
+            titleshow = "Station name : " + onetip[1] + '\nNumber of piles: ' + onetip[5] + "\nLocation: (" + onetip[2] + "," + onetip[3] + ")"
+            marker = new AMap.Marker({
+                title: titleshow,
+                icon: "//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png",
+                position: [onetip[2], onetip[3]],
+                offset: new AMap.Pixel(-10, -30)
+            });
+            marker.setLabel({
+                offset: new AMap.Pixel(10, 10), //设置文本标注偏移量
+                content: "<div class='info'>" + onetip[1] + "</div>", //设置文本标注内容
+                direction: 'top' //设置文本标注方位
+            })
+            map3.add(marker)
+        }
+    })
+</script>
+{% endblock toc %}
