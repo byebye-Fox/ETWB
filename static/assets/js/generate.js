@@ -347,10 +347,15 @@ $("#oriGenerateData").click(function() {
                 thedata = resdata["data"]
                 charging_times = resdata['charging_times']
                 queue_time = resdata['queue_time']
+                dates_charging_times = resdata['dates_charging_times']
+                day_traveled = resdata['day_traveled']
+                hours = resdata['hours']
+                traveled_before_charging = resdata['traveled_before_charging']
+
 
                 stations = []
                 for(var key in charging_times){
-                    stations.push(key)
+                    stations.push(key.toString())
                 }
 
                 charging_by_license = []
@@ -394,14 +399,35 @@ $("#oriGenerateData").click(function() {
 
                 }
 
+                day_traveled_x_axis = []
+                day_traveled_y_axis = []
+                for(let key in day_traveled['dis']){
+                    let temp_x = parseInt(day_traveled['min_data'] + parseInt(key) * day_traveled['dis_distance'])
+                    day_traveled_x_axis.push(temp_x)
+                    day_traveled_y_axis.push(day_traveled['dis'][key])
+                }
+
+                traveled_before_charging_x_axis = []
+                traveled_before_charging_y_axis = []
+                for(let key in traveled_before_charging['dis']){
+                    let temp_x = parseInt(traveled_before_charging['min_data'] + parseInt(key) * traveled_before_charging['dis_distance'])
+                    traveled_before_charging_x_axis.push(temp_x)
+                    traveled_before_charging_y_axis.push(traveled_before_charging['dis'][key])
+                }
+
+
+
                 var barChart = echarts.init(document.getElementById('ori_barChart'));
                 var barChart2 = echarts.init(document.getElementById('queuing_time_chart'));
+                var barChart3 = echarts.init(document.getElementById('day_traveled'));
+                var barChart4 = echarts.init(document.getElementById('traveled_before_charging'));
+                var barChart5 = echarts.init(document.getElementById('dates_charging_times'));
+
                 var colors = ['#5793f3', '#d14a61', '#675bba'];
                 var colors2 = ['#578432' , '#d14561' , '#123456']
 
                 option = {
                     color: colors,
-
                     tooltip: {
                         trigger: 'axis',
                         axisPointer: {
@@ -491,9 +517,146 @@ $("#oriGenerateData").click(function() {
                     }, ]
                 };
 
+                option3 = {
+                    color: colors,
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross'
+                        }
+                    },
+                    grid: {
+                        right: '20%'
+                    },
+                    legend: {
+                        data: ['day traveled']
+                    },
+                    xAxis: [{
+                        type: 'category',
+                        name: 'traveled distance',
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        data: day_traveled_x_axis
+                    }],
+                    yAxis: [{
+                            type: 'value',
+                            name: 'number',
+                            min: 0,
+                            position: 'left',
+                            axisLine: {
+                                lineStyle: {
+                                    color: colors[1]
+                                }
+                            },
+                            axisLabel: {
+                                formatter: '{value} '
+                            }
+                        }
+
+                    ],
+                    series: [{
+                        name: '分布',
+                        type: 'line',
+                        data: day_traveled_y_axis
+                    }, ]
+                };
+                
+                option4 = {
+                    color: colors,
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross'
+                        }
+                    },
+                    grid: {
+                        right: '20%'
+                    },
+                    legend: {
+                        data: ['traveled before charging']
+                    },
+                    xAxis: [{
+                        type: 'category',
+                        name: 'traveled before charging',
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        data: traveled_before_charging_x_axis
+                    }],
+                    yAxis: [{
+                            type: 'value',
+                            name: 'number',
+                            min: 0,
+                            position: 'left',
+                            axisLine: {
+                                lineStyle: {
+                                    color: colors[1]
+                                }
+                            },
+                            axisLabel: {
+                                formatter: '{value} '
+                            }
+                        }
+
+                    ],
+                    series: [{
+                        name: '分布',
+                        type: 'line',
+                        data: traveled_before_charging_y_axis
+                    }, ]
+                };
+
+                option5 = {
+                    color: colors,
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross'
+                        }
+                    },
+                    grid: {
+                        right: '20%'
+                    },
+                    legend: {
+                        data: ['traveled before charging']
+                    },
+                    xAxis: [{
+                        type: 'category',
+                        name: 'time of day',
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        data: hours
+                    }],
+                    yAxis: [{
+                            type: 'value',
+                            name: 'number',
+                            min: 0,
+                            position: 'left',
+                            axisLine: {
+                                lineStyle: {
+                                    color: colors[1]
+                                }
+                            },
+                            axisLabel: {
+                                formatter: '{value} '
+                            }
+                        }
+
+                    ],
+                    series: [{
+                        name: '分布',
+                        type: 'line',
+                        data: dates_charging_times
+                    }, ]
+                };
+                
                 barChart.setOption(option);
                 barChart2.setOption(option2);
-
+                barChart3.setOption(option3);
+                barChart4.setOption(option4);
+                barChart5.setOption(option5)
                 
                 $('#ori_thetbody').append(res)
                 $('#ori-multi-filter-select').DataTable({

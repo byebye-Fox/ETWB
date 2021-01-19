@@ -135,15 +135,34 @@ def generatedata_ori(request):
     generate_data.reset_index(inplace = True)
     shape = generate_data.shape
     if(shape[0] > 1000):
-        send_data = generate_data.iloc[0:1000]
+        send_data = generate_data.iloc[0:100000]
 
+    print(send_data)
+
+    hours = []
+    dates_charging_times = []
     charging_times = {}
     queuing_time = {}
-    
+    traveled_before_charging = []
+    day_traveled = []
     print(shape[0])
+
+    def date_filling(oneCar_oneDay):
+        row = oneCar_oneDay.shape[0]
+        charging_events = oneCar_oneDay.loc[oneCar_oneDay['event'] == 'charging']
+        traveled_total = charging_events['traveled'].sum() + oneCar_oneDay.iloc[0,:]['traveled'] + oneCar_oneDay.iloc[-1,:]['traveled']
+        day_traveled.append(traveled_total)
+
+    def day_filling(one_day):
+        hours.append(one_day.iloc[0]['time_of_day'])
+        charging_events = one_day.loc[one_day['event'] == 'charging']
+        date_charging_times = charging_events.shape[0]
+        dates_charging_times.append(date_charging_times)   
+         # 每个小时的充电事件发生次数
 
     def filling(onetip):
         if(onetip['event'] == 'charging'):
+            traveled_before_charging.append(onetip['traveled'])
             the_id = 'A' + str(onetip['station'])
             if(the_id in charging_times.keys()):
                 charging_times[the_id] = charging_times[the_id] + 1
@@ -152,17 +171,42 @@ def generatedata_ori(request):
                 charging_times[the_id] = 1
                 queuing_time[the_id] = onetip['queuing']
 
-    charging_events = generate_data.loc[generate_data['event'] == 'charging']
+    send_data['time_of_day'] = send_data['timestamp'].apply(lambda x:x.strftime('%H'))
+    send_data['date'] = send_data['timestamp'].apply(lambda x:x.strftime('%Y-%m-%d'))
+    send_data.groupby('time_of_day').apply(day_filling)
+    send_data.groupby('date').apply(lambda x: x.groupby('id').apply(date_filling))
+    charging_events = send_data.loc[generate_data['event'] == 'charging']
     charging_events.apply(filling , axis=1)
-    
+
+    def get_dis(data , dis_counts):
+        max_data = max(data)
+        min_data = min(data)
+        dis = {}
+        dis_distance = (max_data - min_data) / dis_counts
+        for i in range(0,(dis_counts + 1)):
+            dis[i] = 0
+        for i in data:
+            label = int((i - min_data)//dis_distance)
+            dis[label] = dis[label] + 1
+        return {'dis':dis,'dis_distance':dis_distance,'min_data':min_data}
+
+    print(hours)
+    print(dates_charging_times)
+    print(charging_times)
+    print(queuing_time)
+    print(get_dis(traveled_before_charging , 50) )
+    print(get_dis(day_traveled , 50))
+
     for key in queuing_time:
-        print(queuing_time[key])
-        print(charging_times[key])
         queuing_time[key] = queuing_time[key] / charging_times[key]
 
     json_res = to_json1(send_data)
+    json_res['hours'] = hours
+    json_res['dates_charging_times'] = dates_charging_times
     json_res['charging_times'] = charging_times
     json_res['queue_time'] = queuing_time
+    json_res['traveled_before_charging'] = get_dis(traveled_before_charging , 50)
+    json_res['day_traveled'] = get_dis(day_traveled , 50)
     return JsonResponse(json_res , safe = False)
 
 def ori_downfile(request):

@@ -63,9 +63,12 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="align-items: center;">
                         <div id="ori_barChart" style="width: 100%;height:300px;"></div>
                         <div id='queuing_time_chart' style="width: 100%;height: 300px;"></div>
+                        <div id="day_traveled" style="width: 100% ; height:300px;"></div>
+                        <div id="traveled_before_charging" style="width: 100%; height: 300px;"></div>
+                        <div id="dates_charging_times" style="width: 100%; height: 300px;"></div>
                     </div>
                     <a class="btn btn-success col-md-2 ml-4 mr-4" id="downloadData" href="{% url 'ori_filedownload' %}">
                         <span class="btn-label">
